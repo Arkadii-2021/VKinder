@@ -1,0 +1,11 @@
+CREATE DATABASE vk_member;
+CREATE USER vkinder with password 'vk_link';
+ALTER DATABASE vk_member OWNER TO vkinder;
+
+create table if not exists White_list (
+	id_user integer not null,
+);
+
+create table if not exists Black_list (
+	id_user integer not null
+);

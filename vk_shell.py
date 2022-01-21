@@ -55,6 +55,10 @@ def get_member(member_random, event_user_id):
     vk_client.get_top_photo_list(member_random['ID'])
     vk_client.photos_get(member_random['ID'])
     write_msg(event_user_id, random_member_table(member_random))
+    # запрос пользователю для уточнения его семейного положения (не проверено)
+    # if member_random['Семейное положение'] == 'не указано':
+    #     write_msg(member_random['ID'], 'Здравствуйте, укажите пожалуйста в своём профиле '
+    #                                    'Ваш статус семейного положения')
     if dir_photos_list:
         make_dir_photos(event_user_id)
     else:
@@ -62,7 +66,7 @@ def get_member(member_random, event_user_id):
 
 
 def bot_shell():
-    print('VKinder started')
+    print("VKinder started\nВведите в чате VK команду типа 'Поиск пары' или 'Найди мне пару'")
     filter_member_list = []
 
     for event in longpoll.listen():
@@ -70,7 +74,7 @@ def bot_shell():
             if event.to_me:
                 request = event.text.lower()
 
-                if request == 'Поиск' or 'ищи дальше':
+                if request == 'Поиск пары' or 'Найди мне пару':
                     my_user = vk_client.users_get(event.user_id)['response'][0]["first_name"]
                     write_msg(event.user_id, f"Привет, {my_user}! Ожидайте результаты...")
                     n = 1

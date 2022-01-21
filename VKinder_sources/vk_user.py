@@ -17,26 +17,6 @@ class VkUser:
             'v': version
         }
 
-    def check_token(self):
-        groups_url = self.url + 'secure.checkToken'
-        print('Проверка токена')
-        res = requests.get(groups_url, params={**self.params})
-        return res.json()
-
-    def get_members(self, group_id, sorting=None):
-        groups_url = self.url + 'groups.getMembers'
-        groups_params = {
-            'group_id': group_id,
-            'sort': sorting,
-            'count': 900,
-            'fields': 'sex, bdate, city, country, photo_50, photo_100, photo_200_orig, photo_200, photo_400_orig, '
-                      'photo_max, photo_max_orig, online, online_mobile, lists, domain, has_mobile, contacts, '
-                      'connections, site, education, universities, schools, can_post, can_see_all_posts, '
-                      'can_see_audio, can_write_private_message, status, last_seen, common_count, relation, relatives'
-        }
-        res = requests.get(groups_url, params={**self.params, **groups_params})
-        return res.json()
-
     def users_get(self, user_id=None):
         groups_url = self.url + 'users.get'
         users_params = {
@@ -44,16 +24,30 @@ class VkUser:
             'fields': 'photo_id, verified, sex, bdate, city, country, home_town, has_photo, '
                       'photo_50, photo_100, photo_200_orig, photo_200, photo_400_orig, photo_max, photo_max_orig, '
                       'online, domain, has_mobile, contacts, site, education, universities, schools, status, '
-                      'last_seen, followers_count, common_count, '
-                      'occupation, nickname, relatives, relation, personal, connections, exports, activities, '
-                      'interests, music, movies, tv, '
-                      'books, games, about, quotes, can_post, can_see_all_posts, can_see_audio, can_write_private_'
-                      'message, can_send_friend_request, '
-                      'is_favorite, is_hidden_from_feed, timezone, screen_name, maiden_name, crop_photo, is_friend,'
-                      'friend_status, career, military, '
-                      'blacklisted, blacklisted_by_me, can_be_invited_group'
+                      'last_seen, followers_count, common_count, occupation, nickname, relatives, relation, personal, '
+                      'connections, exports, activities, interests, music, movies, tv, books, games, about, quotes, '
+                      'can_post, can_see_all_posts, can_see_audio, message, can_send_friend_request, is_favorite, '
+                      'is_hidden_from_feed, timezone, screen_name, maiden_name, crop_photo, is_friend, friend_status, '
+                      'career, military, blacklisted, blacklisted_by_me, can_be_invited_group'
         }
-        res = requests.get(groups_url, params={**self.params, **users_params})
+        res = requests.get(groups_url, params={**self.params, **users_params}, timeout=5)
+        return res.json()
+
+    def users_search(self, q=''):
+        groups_url = self.url + 'users.search'
+        users_params = {
+            'q': q,
+            'count': 900,
+            'fields': 'about, activities, bdate, blacklisted, blacklisted_by_mebooks, can_post, can_see_all_posts,'
+                      'can_see_audio, can_send_friend_request, can_write_private_message, career, city, common_count,'
+                      'connections, contacts, country, crop_photo, domain, education, exports, followers_count, '
+                      'friend_status, games, has_mobile, has_photo, home_town, interests, is_favorite, is_friend,'
+                      'is_hidden_from_feed, last_seen, lists, maiden_name, military, movies, music, nickname,'
+                      'occupation, online, personal, photo_100, photo_200, photo_200_orig, photo_400_orig, photo_50,'
+                      'photo_id, photo_max, photo_max_orig, quotes, relation, relatives, schools, screen_name, sex,'
+                      'site, status, timezone, tv, universities, verified, wall_comments'
+        }
+        res = requests.get(groups_url, params={**self.params, **users_params}, timeout=5)
         return res.json()
 
     def get_top_photo_list(self, owner_id=None):
@@ -64,7 +58,7 @@ class VkUser:
             'extended': '1',
             'count': 500
         }
-        res = requests.get(photos_url, params={**self.params, **photos_params}).json()
+        res = requests.get(photos_url, params={**self.params, **photos_params}, timeout=5).json()
         sizes_album_list = res['response']['items']
         for album_list in sizes_album_list:
             likes_list.append(album_list['likes']['count'])
@@ -100,9 +94,4 @@ class VkUser:
                         image_vk.write(response_url.content)
                     photos_list.append(str(album_list['likes']['count']) + '_' + str(random_post) + '.jpg')
         print(f'Список файлов:\n{photos_list}')
-
-
-
-
-
 

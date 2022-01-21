@@ -1,0 +1,4 @@
+vk_api==11.9.7
+requests==2.26.0
+sqlalchemy==1.4.29
+psycopg2==2.9.3
